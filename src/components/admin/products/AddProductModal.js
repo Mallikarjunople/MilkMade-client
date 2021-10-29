@@ -17,7 +17,7 @@ const AddProductDetail = ({ categories }) => {
     pName: "",
     pDescription: "",
     pStatus: "Active",
-    pImage: null, // Initial value will be null or empty array
+    pImage: [], // Initial value will be null or empty array
     pCategory: "",
     pPrice: 0,
     pOffer: 0,
@@ -37,6 +37,34 @@ const AddProductDetail = ({ categories }) => {
         });
       }
     }, 1000);
+  };
+
+  const uploadImage = async (e) => {
+    const files = e.target.files;
+    const data = new FormData();
+    // console.log(files);
+    for (const i of files) {
+      data.append("file", i);
+      data.append("upload_preset", "MilkMadepreset");
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/duja4ggya/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const file = await res.json();
+      
+      // console.log(file)
+      setFdata({
+        ...fData,
+        success: false,
+        error: false,
+        pImage: [...fData.pImage,file.secure_url],
+      });
+      // setShowImages([...showImages, ...e.target.files]);
+      // console.log(file.secure_url);
+    }
   };
 
   const submitForm = async (e) => {
@@ -230,13 +258,7 @@ const AddProductDetail = ({ categories }) => {
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <input
                   onChange={(e) => {
-                    setFdata({
-                      ...fData,
-                      error: false,
-                      success: false,
-                      pImage: [...e.target.files],
-                    });
-                    setShowImages([...showImages, ...e.target.files]);
+                    uploadImage(e);
                   }}
                   type="file"
                   accept=".jpg, .jpeg, .png"
@@ -315,8 +337,11 @@ const AddProductDetail = ({ categories }) => {
             </div>
 
             {/* <div className="flex space-x-1 py-1"> */}
-            <div className="w-100 flex flex-col space-y-1 space-x-1">
-              <label htmlFor="variantval">Select Variant*</label>
+            <div className="w-100 flex flex-row space-y-1 space-x-1">
+              <label htmlFor="variantval">Select Variant</label>
+              <span className="text-red-600 text-xs">
+              *Add at least 2 Variant
+                </span>
               <div className="w-100 flex flex-row space-x-1">
                 <input
                   value={variant.value || 0}

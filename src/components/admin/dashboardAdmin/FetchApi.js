@@ -19,11 +19,10 @@ export const getSliderImages = async () => {
   }
 };
 
-export const postUploadImage = async (formData) => {
+export const postUploadImage = async (image) => {
   try {
     let res = await axios.post(
-      `${apiURL}/api/customize/upload-slide-image`,
-      formData
+      `${apiURL}/api/customize/upload-slide-image`,image
     );
     return res.data;
   } catch (error) {

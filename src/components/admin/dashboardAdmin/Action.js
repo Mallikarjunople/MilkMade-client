@@ -48,11 +48,20 @@ export const deleteImage = async (id, dispatch) => {
 
 export const uploadImage = async (image, dispatch) => {
   dispatch({ type: "imageUpload", payload: true });
-  let formData = new FormData();
-  formData.append("image", image);
-  console.log(formData.get("image"));
+  
+  const data = new FormData();
+  data.append("file", image);
+  data.append("upload_preset", "MilkMadepreset");
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/duja4ggya/image/upload",
+    {
+      method: "POST",
+      body: data,
+    }
+  );
+  const file = await res.json();
   try {
-    let responseData = await postUploadImage(formData);
+    let responseData = await postUploadImage(file);
     if (responseData && responseData.success) {
       setTimeout(function () {
         dispatch({ type: "imageUpload", payload: false });
@@ -63,3 +72,5 @@ export const uploadImage = async (image, dispatch) => {
     console.log(error);
   }
 };
+
+

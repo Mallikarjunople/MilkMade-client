@@ -34,6 +34,35 @@ const AddCategoryModal = (props) => {
     }, 2000);
   }
 
+
+
+  
+  const uploadImage = async (e) => {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append("file", files[0]);
+    data.append("upload_preset", "MilkMadepreset");
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/duja4ggya/image/upload",
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+    const file = await res.json();
+        setFdata({
+                    ...fData,
+                    success: false,
+                    error: false,
+                    cImage: file.secure_url,
+                  });
+    console.log(file.secure_url);
+  };
+
+
+
+
+
   const submitForm = async (e) => {
     dispatch({ type: "loading", payload: true });
     // Reset and prevent the form
@@ -172,12 +201,7 @@ const AddCategoryModal = (props) => {
               <input
                 accept=".jpg, .jpeg, .png"
                 onChange={(e) => {
-                  setFdata({
-                    ...fData,
-                    success: false,
-                    error: false,
-                    cImage: e.target.files[0],
-                  });
+                   uploadImage(e)
                 }}
                 className="px-4 py-2 border focus:outline-none"
                 type="file"
