@@ -44,7 +44,7 @@ const PageNotFound = (props) => {
   };
   return (
     <div className="mx-10 " style={{margin:"100px 300px 100px 300px"}}>
-        <div className="text-center text-4xl mb-6 text-green-400  font-weight-bolder">MILKWALE</div>
+        <div className="text-center text-4xl mb-6 text-green-400  font-weight-bolder">MILKMADE</div>
       <div className="text-center text-2xl mb-6">Login</div>
       {layoutData.loginSignupError ? (
         <div className="bg-red-200 py-2 px-4 rounded">
