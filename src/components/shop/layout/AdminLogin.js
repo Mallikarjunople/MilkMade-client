@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useContext } from "react";
 import { loginReq } from "../auth/fetchApi";
 import { LayoutContext } from "../index";
-
+import "./main.css";
 
 
 const PageNotFound = (props) => {
@@ -17,7 +17,7 @@ const PageNotFound = (props) => {
     loading: true,
   });
 
-  const alert = (msg) => <div className="text-xs text-red-500">{msg}</div>;
+  const alert = (msg) => <div className="text-md text-white">{msg}</div>;
 
   const formSubmit = async () => {
     setData({ ...data, loading: true });
@@ -43,21 +43,14 @@ const PageNotFound = (props) => {
     }
   };
   return (
-    <div className="mx-10 " style={{margin:"100px 300px 100px 300px"}}>
-        <div className="text-center text-4xl mb-6 text-green-400  font-weight-bolder">MILKMADE</div>
-      <div className="text-center text-2xl mb-6">Login</div>
-      {layoutData.loginSignupError ? (
-        <div className="bg-red-200 py-2 px-4 rounded">
-          You need to login for checkout. Haven't accont? Create new one.
-        </div>
-      ) : (
-        ""
-      )}
+    <div className="container-fluid bg-gray-200 bg-main" >
+        <div className="text-center  mb-6 text-white font-weight-bolder heading-main">MILKMADE</div>
+      <div className="text-center text-2xl text-white font-bold my-5">Admin Login</div>
+     
       <form className="space-y-4">
-        <div className="flex flex-col">
-          <label htmlFor="name">
-            Username or email address
-            <span className="text-sm text-gray-600 ml-1">*</span>
+        <div className="flex flex-col my-3">
+          <label htmlFor="name" className=" text-white text-lg font-bold">
+            Email address
           </label>
           <input
             onChange={(e) => {
@@ -73,9 +66,9 @@ const PageNotFound = (props) => {
           />
           {!data.error ? "" : alert(data.error)}
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="password">
-            Password<span className="text-sm text-gray-600 ml-1">*</span>
+        <div className="flex flex-col  my-3">
+          <label htmlFor="password" className="text-white text-lg font-bold">
+            Password
           </label>
           <input
             onChange={(e) => {
@@ -91,27 +84,14 @@ const PageNotFound = (props) => {
           />
           {!data.error ? "" : alert(data.error)}
         </div>
-        <div className="flex flex-col space-y-2 md:flex-row md:justify-between md:items-center">
-          {/* <div>
-            <input
-              type="checkbox"
-              id="rememberMe"
-              className="px-4 py-2 focus:outline-none border mr-1"
-            />
-            <label htmlFor="rememberMe">
-              Remember me<span className="text-sm text-gray-600">*</span>
-            </label>
-          </div>
-          <a className="block text-gray-600" href="/">
-            Lost your password?
-          </a> */}
-        </div>
+       <div style={{marginTop:"10%"}} className="centerize">
         <div
           onClick={(e) => formSubmit()}
-          style={{ background: "#303031" }}
-          className="font-medium px-4 py-2 text-white text-center cursor-pointer"
+          style={{ background: "#303031",width:'30%' }}
+          className="font-medium px-4 py-5 text-white text-center cursor-pointer text-2xl  font-bold"
         >
           Login
+        </div>
         </div>
       </form>
     </div>

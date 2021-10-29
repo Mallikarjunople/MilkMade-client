@@ -13,7 +13,7 @@ const AdminNavber = (props) => {
 
   return (
     <Fragment>
-      <nav className="sticky z-10 flex items-center shadow-md justify-between px-4 py-4 md:px-8 top-0 w-full bg-green-400">
+      <nav className="sticky z-10 flex items-center shadow-md justify-between px-4 py-4 md:px-8 top-0 w-full theme-color">
         {/*  Large Screen Show  */}
         <div className="hidden lg:block lg:flex lg:items-center lg:space-x-4 mr-32">
           <span>
@@ -122,7 +122,7 @@ const AdminNavber = (props) => {
                 d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <div className="userDropdown absolute right-0 mt-1 bg-gray-200 rounded">
+            <div className="userDropdown absolute right-0 mt-1 bg-gray-200 rounded hover:theme-color">
               <li className="flex flex-col text-gray-700">
                 {/* <span
                   onClick={(e) => history.push("/")}
@@ -173,7 +173,7 @@ const AdminNavber = (props) => {
                 </span> */}
                 <span
                   onClick={(e) => logout()}
-                  className="flex space-x-1 py-2 px-8 hover:bg-gray-600 hover:text-white cursor-pointer"
+                  className="flex space-x-1 py-2 px-8 hover:theme-color hover:text-white cursor-pointer"
                 >
                   <span>
                     <svg

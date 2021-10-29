@@ -1,0 +1,27 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+/* Usuals */
+.theme-color{
+    background-color: #20bf55;
+    background-image: linear-gradient(315deg, #01baef 0%, #20bf55 74%);
+}
+
+/* Usuals */
+
+
+.bg-main{
+    padding: 10% 30% 10% 30%;
+    height: 100vh;
+    background-color: #20bf55;
+    background-image: linear-gradient(315deg, #01baef 0%, #20bf55 74%);
+
+    
+    width: 100vw;
+}
+.heading-main{
+    font-size: 70px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+

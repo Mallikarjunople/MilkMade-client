@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useEffect } from "react";
 import { DashboardContext } from "./";
 import { uploadImage, sliderImages, deleteImage } from "./Action";
+import "./main.css";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
@@ -59,35 +60,23 @@ const UploadImageSection = () => {
         </h1>
         <div className="relative flex flex-col space-y-2">
           <div
-            style={{ background: "#303031" }}
+            style={{ background: "#303031",width:"max-content" }}
             className="relative z-0 px-4 py-2 rounded text-white flex justify-center space-x-2 md:w-4/12"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>{" "}
-            <span className="cursor-pointer">Upload File 
-              <input
-            onChange={(e) => uploadImageHandler(e.target.files[0])}
-            name="image"
-            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-            className="absolute z-10 opacity-3 relative py-2 rounded text-white flex justify-center space-x-2 md:w-4/12 "
-            type="file"
-            id="image"
-          /></span>
-           
+            <label for="file-upload" class="custom-file-upload">
+              <span className="cursor-pointer">Upload File + </span>
+            </label>
+            <input id="file-upload" type="file" />
+            <input
+              onChange={(e) => uploadImageHandler(e.target.files[0])}
+              name="image"
+              accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+              className="absolute z-10 opacity-3 relative py-2 rounded text-white flex justify-center space-x-2 md:w-4/12 "
+              type="file"
+              id="image"
+              style={{ display: "none" }}
+            />
           </div>
-       
         </div>
         <span
           onClick={(e) =>
@@ -159,7 +148,7 @@ const AllImages = () => {
             return (
               <div key={index} className="relative col-span-1 m-2 border">
                 <img
-                  className="w-full md:h-32 object-center object-cover"
+                  className="w-full md:h-64 object-center object-cover"
                   src={item.slideImage}
                   alt="sliderImages"
                 />

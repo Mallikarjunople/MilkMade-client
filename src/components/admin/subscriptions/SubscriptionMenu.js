@@ -111,7 +111,7 @@ const SubscriptionMenu = (props) => {
             </div>
           </div>
           <div>
-            <SearchFilter />
+            {/* <SearchFilter /> */}
           </div>
         </div>
         {/*<AddCategoryModal/>*/}
