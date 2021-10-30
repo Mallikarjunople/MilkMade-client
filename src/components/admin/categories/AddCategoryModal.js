@@ -34,9 +34,6 @@ const AddCategoryModal = (props) => {
     }, 2000);
   }
 
-
-
-  
   const uploadImage = async (e) => {
     const files = e.target.files;
     const data = new FormData();
@@ -50,18 +47,14 @@ const AddCategoryModal = (props) => {
       }
     );
     const file = await res.json();
-        setFdata({
-                    ...fData,
-                    success: false,
-                    error: false,
-                    cImage: file.secure_url,
-                  });
+    setFdata({
+      ...fData,
+      success: false,
+      error: false,
+      cImage: file.secure_url,
+    });
     console.log(file.secure_url);
   };
-
-
-
-
 
   const submitForm = async (e) => {
     dispatch({ type: "loading", payload: true });
@@ -196,16 +189,24 @@ const AddCategoryModal = (props) => {
               />
             </div>
             {/* Image Field & function */}
+
             <div className="flex flex-col space-y-1 w-full">
-              <label htmlFor="name">Category Image</label>
-              <input
-                accept=".jpg, .jpeg, .png"
-                onChange={(e) => {
-                   uploadImage(e)
-                }}
-                className="px-4 py-2 border focus:outline-none"
-                type="file"
-              />
+              <label>Category Image</label>
+              <div
+                style={{ background: "#303031", width: "max-content" }}
+                className="relative z-0 rounded text-white flex justify-center text-sm"
+              >
+                <label for="file-upload" class="custom-file-upload">
+                  <span className="cursor-pointer">Upload Image </span>
+                </label>
+                <input
+                  onChange={(e) => uploadImage(e)}
+                  name="image"
+                  accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                  type="file"
+                  id="file-upload"
+                />
+              </div>
             </div>
             <div className="flex flex-col space-y-1 w-full">
               <label htmlFor="status">Category Status</label>

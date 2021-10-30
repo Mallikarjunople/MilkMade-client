@@ -1,14 +1,12 @@
 import React, { Fragment, useState, useContext } from "react";
 import { loginReq } from "../auth/fetchApi";
+import LoginSignup from "../auth/LoginSignup";
 import { LayoutContext } from "../index";
 import "./main.css";
 
-
 const AdminLogin = (props) => {
-
-  const { data: layoutData, dispatch: layoutDispatch } = useContext(
-    LayoutContext
-  );
+  const { data: layoutData, dispatch: layoutDispatch } =
+    useContext(LayoutContext);
 
   const [data, setData] = useState({
     email: "",
@@ -26,7 +24,7 @@ const AdminLogin = (props) => {
         email: data.email,
         password: data.password,
       });
-      console.log(responseData)
+      console.log(responseData);
       if (responseData.error) {
         setData({
           ...data,
@@ -37,18 +35,54 @@ const AdminLogin = (props) => {
       } else if (responseData.token && responseData.userId.role) {
         setData({ email: "", password: "", loading: false, error: false });
         localStorage.setItem("jwt", JSON.stringify(responseData));
-        localStorage.setItem("loggedInRole",JSON.stringify(responseData.userId.role))
+        localStorage.setItem(
+          "loggedInRole",
+          JSON.stringify(responseData.userId.role)
+        );
         window.location.href = "/admin/dashboard";
       }
     } catch (error) {
       console.log(error);
     }
   };
+  const LoginAsGuest = async () => {
+    setData({ ...data, loading: true });
+    try {
+      let responseData = await loginReq({
+        email: "guest@gmail.com",
+        password: "guest@gmail.com",
+      });
+      console.log(responseData);
+      if (responseData.error) {
+        setData({
+          ...data,
+          loading: false,
+          error: responseData.error,
+          password: "",
+        });
+      } else if (responseData.token && responseData.userId.role) {
+        setData({ email: "", password: "", loading: false, error: false });
+        localStorage.setItem("jwt", JSON.stringify(responseData));
+        localStorage.setItem(
+          "loggedInRole",
+          JSON.stringify(responseData.userId.role)
+        );
+        window.location.href = "/admin/dashboard";
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="container-fluid bg-gray-200 bg-main" >
-        <div className="text-center  mb-6 text-white font-weight-bolder heading-main">MILKMADE</div>
-      <div className="text-center text-2xl text-white font-bold my-5">Admin Login</div>
-     
+    <div className="container-fluid bg-gray-200 bg-main">
+      <div className="text-center  mb-6 text-white font-weight-bolder heading-main">
+        MILKMADE
+      </div>
+      <div className="text-center text-2xl text-white font-bold my-5">
+        Admin Login
+      </div>
+
       <form className="space-y-4">
         <div className="flex flex-col my-3">
           <label htmlFor="name" className=" text-white text-lg font-bold">
@@ -86,18 +120,37 @@ const AdminLogin = (props) => {
           />
           {!data.error ? "" : alert(data.error)}
         </div>
-       <div style={{marginTop:"10%"}} className="centerize">
         <div
-          onClick={(e) => formSubmit()}
-          style={{ background: "#303031",width:'30%' }}
-          className="font-medium px-4 py-5 text-white text-center cursor-pointer text-2xl  font-bold"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: "3rem",
+          }}
         >
-          Login
-        </div>
+          <div
+            onClick={(e) => formSubmit()}
+            style={{ background: "rgb(21 108 102)", width: "30%" }}
+            className=" px-4 py-5 text-white text-center cursor-pointer text-2xl  font-bold"
+          >
+            Login
+          </div>
+
+          <div
+            onClick={(e) =>LoginAsGuest()}
+            style={{
+              background: "#fff",
+              color: "rgb(56 216 109)",
+              width: "30%",
+            }}
+            className="px-4 py-5 text-white text-center cursor-pointer text-2xl  font-bold"
+          >
+            Guest Login
+          </div>
         </div>
       </form>
     </div>
-  )
+  );
 };
 
 export default AdminLogin;

@@ -4,7 +4,7 @@ import { uploadImage, sliderImages, deleteImage } from "./Action";
 import "./main.css";
 
 const apiURL = process.env.REACT_APP_API_URL;
-
+const isGuestUser = () =>{return localStorage.getItem("loggedInRole") == 2}
 const Customize = () => {
   const { data, dispatch } = useContext(DashboardContext);
 
@@ -66,15 +66,14 @@ const UploadImageSection = () => {
             <label for="file-upload" class="custom-file-upload">
               <span className="cursor-pointer">Upload File + </span>
             </label>
-            <input id="file-upload" type="file" />
             <input
               onChange={(e) => uploadImageHandler(e.target.files[0])}
               name="image"
               accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-              className="absolute z-10 opacity-3 relative py-2 rounded text-white flex justify-center space-x-2 md:w-4/12 "
+            
               type="file"
-              id="image"
-              style={{ display: "none" }}
+              id="file-upload"
+             
             />
           </div>
         </div>

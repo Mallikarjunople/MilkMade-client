@@ -42,7 +42,7 @@ const AddProductDetail = ({ categories }) => {
   const uploadImage = async (e) => {
     const files = e.target.files;
     const data = new FormData();
-    // console.log(files);
+    let arrayImagesUrl=[];
     for (const i of files) {
       data.append("file", i);
       data.append("upload_preset", "MilkMadepreset");
@@ -54,17 +54,16 @@ const AddProductDetail = ({ categories }) => {
         }
       );
       const file = await res.json();
-      
-      // console.log(file)
-      setFdata({
-        ...fData,
-        success: false,
-        error: false,
-        pImage: [...fData.pImage,file.secure_url],
-      });
+      arrayImagesUrl.push(file.secure_url);
       // setShowImages([...showImages, ...e.target.files]);
-      // console.log(file.secure_url);
     }
+
+    setFdata({
+      ...fData,
+      success: false,
+      error: false,
+      pImage: arrayImagesUrl,
+    });
   };
 
   const submitForm = async (e) => {
@@ -118,16 +117,16 @@ const AddProductDetail = ({ categories }) => {
           return setFdata({ ...fData, error: false, success: false });
         }, 2000);
       }
-      setShowImages([]);
+      // setShowImages([]);
     } catch (error) {
       console.log(error);
     }
   };
 
   const submitVariant = () => {
-    console.log(variant);
+    // console.log(variant);
     setFdata({ ...fData, pVariant: [...fData.pVariant, variant] });
-    console.log(fData);
+    // console.log(fData);
   };
 
   return (
@@ -256,7 +255,7 @@ const AddProductDetail = ({ categories }) => {
                 </span>
               </label>
               <div style={{ display: "flex", flexDirection: "row" }}>
-                <input
+                {/* <input
                   onChange={(e) => {
                     uploadImage(e);
                   }}
@@ -266,8 +265,23 @@ const AddProductDetail = ({ categories }) => {
                   style={{ width: "40%" }}
                   id="image"
                   multiple
+                /> */}
+              <div
+                style={{ background: "#303031", width: "max-content" }}
+                className="relative z-0 rounded text-white flex justify-center text-sm"
+              >
+                <label for="file-upload" class="custom-file-upload">
+                  <span className="cursor-pointer">Upload Image </span>
+                </label>
+                <input
+                  onChange={(e) => uploadImage(e)}
+                  name="image"
+                  accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                  type="file"
+                  id="file-upload"
+                  multiple
                 />
-
+              </div>
                 <div
                   style={{
                     display: "flex",
@@ -462,9 +476,9 @@ const AddProductDetail = ({ categories }) => {
               <button
                 style={{ background: "#303031", margin: "5px", width: "30%" }}
                 type="submit"
-                className=" bg-gray-800 text-gray-100 text-lg font-medium py-1"
+                className=" bg-gray-800 rounded text-gray-100 text-lg font-medium py-1"
               >
-                Create product
+                Add product
               </button>
             </div>
           </form>
