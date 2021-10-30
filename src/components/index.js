@@ -5,7 +5,7 @@ import {
   ProtectedRoute,
   AdminProtectedRoute,
   CartProtectedRoute,
-  PageNotFound,
+  AdminLogin,
   ProductDetails,
   ProductByCategory,
   CheckoutPage,
@@ -93,7 +93,7 @@ const Routes = (props) => {
         {/* User Dashboard End */}
 
         {/* 404 Page */}
-        <Route component={PageNotFound} />
+        <Route component={AdminLogin} />
       </Switch>
     </Router>
   );

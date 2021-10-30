@@ -4,7 +4,7 @@ import { LayoutContext } from "../index";
 import "./main.css";
 
 
-const PageNotFound = (props) => {
+const AdminLogin = (props) => {
 
   const { data: layoutData, dispatch: layoutDispatch } = useContext(
     LayoutContext
@@ -26,6 +26,7 @@ const PageNotFound = (props) => {
         email: data.email,
         password: data.password,
       });
+      console.log(responseData)
       if (responseData.error) {
         setData({
           ...data,
@@ -33,9 +34,10 @@ const PageNotFound = (props) => {
           error: responseData.error,
           password: "",
         });
-      } else if (responseData.token) {
+      } else if (responseData.token && responseData.userId.role) {
         setData({ email: "", password: "", loading: false, error: false });
         localStorage.setItem("jwt", JSON.stringify(responseData));
+        localStorage.setItem("loggedInRole",JSON.stringify(responseData.userId.role))
         window.location.href = "/admin/dashboard";
       }
     } catch (error) {
@@ -98,4 +100,4 @@ const PageNotFound = (props) => {
   )
 };
 
-export default PageNotFound;
+export default AdminLogin;
