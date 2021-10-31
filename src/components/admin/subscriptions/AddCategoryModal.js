@@ -1,9 +1,9 @@
 import React, { Fragment, useContext, useState } from "react";
-import { CategoryContext } from "./index";
-import { createCategory, getAllCategory } from "./FetchApi";
+import { SubscriptionContext } from "./index";
+import { createSubscription, getAllSubscription } from "./FetchApi";
 
-const AddCategoryModal = (props) => {
-  const { data, dispatch } = useContext(CategoryContext);
+const AddSubscriptionModal = (props) => {
+  const { data, dispatch } = useContext(SubscriptionContext);
 
   const alert = (msg, type) => (
     <div className={`bg-${type}-200 py-2 px-4 w-full`}>{msg}</div>
@@ -19,10 +19,10 @@ const AddCategoryModal = (props) => {
   });
 
   const fetchData = async () => {
-    let responseData = await getAllCategory();
+    let responseData = await getAllSubscription();
     if (responseData.Categories) {
       dispatch({
-        type: "fetchCategoryAndChangeState",
+        type: "fetchSubscriptionAndChangeState",
         payload: responseData.Categories,
       });
     }
@@ -35,7 +35,7 @@ const AddCategoryModal = (props) => {
     e.target.reset();
 
     if (!fData.cImage) {
-      return setFdata({ ...fData, error: "Please upload a category image" });
+      return setFdata({ ...fData, error: "Please upload a Subscription image" });
       dispatch({ type: "loading", payload: false });
       setTimeout(() => {
         return setFdata({ ...fData, error: false });
@@ -43,7 +43,7 @@ const AddCategoryModal = (props) => {
     }
 
     try {
-      let responseData = await createCategory(fData);
+      let responseData = await createSubscription(fData);
       if (responseData.success) {
         fetchData();
         setFdata({
@@ -83,9 +83,9 @@ const AddCategoryModal = (props) => {
     <Fragment>
       {/* Black Overlay */}
       <div
-        onClick={(e) => dispatch({ type: "addCategoryModal", payload: false })}
+        onClick={(e) => dispatch({ type: "addSubscriptionModal", payload: false })}
         className={`${
-          data.addCategoryModal ? "" : "hidden"
+          data.addSubscriptionModal ? "" : "hidden"
         } fixed top-0 left-0 z-30 w-full h-full bg-black opacity-50`}
       />
       {/* End Black Overlay */}
@@ -93,19 +93,19 @@ const AddCategoryModal = (props) => {
       {/* Modal Start */}
       <div
         className={`${
-          data.addCategoryModal ? "" : "hidden"
+          data.addSubscriptionModal ? "" : "hidden"
         } fixed inset-0 m-4  flex items-center z-30 justify-center`}
       >
         <div className="relative bg-white w-12/12 md:w-3/6 shadow-lg flex flex-col items-center space-y-4  overflow-y-auto px-4 py-4 md:px-8">
           <div className="flex items-center justify-between w-full pt-4">
             <span className="text-left font-semibold text-2xl tracking-wider">
-              Add Category
+              Add Subscription
             </span>
             {/* Close Modal */}
             <span
               style={{ background: "#303031" }}
               onClick={(e) =>
-                dispatch({ type: "addCategoryModal", payload: false })
+                dispatch({ type: "addSubscriptionModal", payload: false })
               }
               className="cursor-pointer text-gray-100 py-2 px-2 rounded-full"
             >
@@ -129,7 +129,7 @@ const AddCategoryModal = (props) => {
           {fData.success ? alert(fData.success, "green") : ""}
           <form className="w-full" onSubmit={(e) => submitForm(e)}>
             <div className="flex flex-col space-y-1 w-full py-4">
-              <label htmlFor="name">Category Name</label>
+              <label htmlFor="name">Subscription Name</label>
               <input
                 onChange={(e) =>
                   setFdata({
@@ -145,7 +145,7 @@ const AddCategoryModal = (props) => {
               />
             </div>
             <div className="flex flex-col space-y-1 w-full">
-              <label htmlFor="description">Category Description</label>
+              <label htmlFor="description">Subscription Description</label>
               <textarea
                 onChange={(e) =>
                   setFdata({
@@ -165,7 +165,7 @@ const AddCategoryModal = (props) => {
             </div>
             {/* Image Field & function */}
             <div className="flex flex-col space-y-1 w-full">
-              <label htmlFor="name">Category Image</label>
+              <label htmlFor="name">Subscription Image</label>
               <input
                 accept=".jpg, .jpeg, .png"
                 onChange={(e) => {
@@ -181,7 +181,7 @@ const AddCategoryModal = (props) => {
               />
             </div>
             <div className="flex flex-col space-y-1 w-full">
-              <label htmlFor="status">Category Status</label>
+              <label htmlFor="status">Subscription Status</label>
               <select
                 name="status"
                 onChange={(e) =>
@@ -209,7 +209,7 @@ const AddCategoryModal = (props) => {
                 type="submit"
                 className="bg-gray-800 text-gray-100 rounded-full text-lg font-medium py-2"
               >
-                Create category
+                Create Subscription
               </button>
             </div>
           </form>
@@ -219,4 +219,4 @@ const AddCategoryModal = (props) => {
   );
 };
 
-export default AddCategoryModal;
+export default AddSubscriptionModal;

@@ -1,10 +1,14 @@
 import React, { Fragment, useContext, useState } from "react";
 import { DelboyContext } from "./index";
 import { createDelboy, getAllDelboy } from "./FetchApi";
+import { useAlert } from "react-alert";
 
 const AddDelboyModal = (props) => {
   const { data, dispatch } = useContext(DelboyContext);
-
+  const alertShow = useAlert();
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
   const alert = (msg, type) => (
     <div className={`bg-${type}-200 py-2 px-4 w-full`}>{msg}</div>
   );
@@ -12,7 +16,7 @@ const AddDelboyModal = (props) => {
   const [fData, setFdata] = useState({
     delName: "",
     delphone: "",
-    delpassword:"",
+    delpassword: "",
     success: false,
     error: false,
   });
@@ -174,7 +178,6 @@ const AddDelboyModal = (props) => {
                 value={fData.delpassword}
                 className="px-4 py-2 border focus:outline-none"
                 type="text"
-                
               />
             </div>
             {/* <div className="flex flex-col space-y-1 w-full">
@@ -237,13 +240,26 @@ const AddDelboyModal = (props) => {
               </select>
             </div> */}
             <div className="flex flex-col space-y-1 w-full pb-4 md:pb-6 mt-4">
-              <button
-                style={{ background: "#303031" }}
-                type="submit"
-                className="bg-gray-800 text-gray-100 rounded-full text-lg font-medium py-2"
-              >
-                Create Delboy
-              </button>
+              {isGuestUser() ? (
+                <button
+                  style={{ background: "#303031" }}
+                  type="button"
+                  className="bg-gray-800 text-gray-100 rounded-full text-lg font-medium py-2"
+                  onClick={() => {
+                    alertShow.show("Sorry, you are not Admin!");
+                  }}
+                >
+                  Create Delboy
+                </button>
+              ) : (
+                <button
+                  style={{ background: "#303031" }}
+                  type="submit"
+                  className="bg-gray-800 text-gray-100 rounded-full text-lg font-medium py-2"
+                >
+                  Create Delboy
+                </button>
+              )}
             </div>
           </form>
         </div>

@@ -13,16 +13,16 @@ const apiURL = process.env.REACT_APP_API_URL;
 //     }
 //   };
   
-//   export const editCategory = async (oId, status) => {
-//     let data = { oId: oId, status: status };
-//     console.log(data);
-//     try {
-//       let res = await axios.post(`${apiURL}/api/order/update-order`, data);
-//       return res.data;
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
+  // export const editCategory = async (oId, status) => {
+  //   let data = { oId: oId, status: status };
+  //   console.log(data);
+  //   try {
+  //     let res = await axios.post(`${apiURL}/api/order/update-order`, data);
+  //     return res.data;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   
 //   export const deleteOrder = async (oId) => {
 //     let data = { oId: oId };
@@ -43,7 +43,7 @@ export const getAllSubscription = async () => {
   }
 };
 
-export const editCategory = async (oId, status) => {
+export const editSubscription = async (oId, status) => {
   let data = { oId: oId, status: status };
   console.log(data);
   try {

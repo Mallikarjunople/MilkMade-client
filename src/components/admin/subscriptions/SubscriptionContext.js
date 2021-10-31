@@ -1,6 +1,6 @@
 export const subscriptionState = {
     subscriptions: [],
-    addCategoryModal: false,
+    addSubscriptionModal: false,
     updateSubscriptionModal: {
       modal: false,
       oId: null,
@@ -11,19 +11,19 @@ export const subscriptionState = {
   
   export const subscriptionReducer = (state, action) => {
     switch (action.type) {
-      /* Get all category */
+      /* Get all subscription */
       case "fetchSubscriptionAndChangeState":
         return {
           ...state,
           subscriptions: action.payload,
         };
-      /* Create a category */
-      case "addCategoryModal":
+      /* Create a subscription */
+      case "addSubscriptionModal":
         return {
           ...state,
-          addCategoryModal: action.payload,
+          addSubscriptionModal: action.payload,
         };
-      /* Edit a category */
+      /* Edit a subscription */
       case "updateSubscriptionModalOpen":
         return {
           ...state,

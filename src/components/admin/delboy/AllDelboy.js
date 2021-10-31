@@ -2,6 +2,7 @@ import React, { Fragment, useContext, useEffect } from "react";
 import { getAllDelboy, deleteDelboy, editDelboy } from "./FetchApi";
 import { DelboyContext } from "./index";
 import moment from "moment";
+import { useAlert } from "react-alert";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
@@ -123,6 +124,10 @@ const AllDelboy = (props) => {
 
 /* Single Delboy Component */
 const DelboyTable = ({ delboy, deleteDelboy, editDelboy }) => {
+  const alertShow = useAlert();
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
   return (
     <Fragment>
       <tr>
@@ -188,7 +193,9 @@ const DelboyTable = ({ delboy, deleteDelboy, editDelboy }) => {
             </svg>
           </span>
           <span
-            onClick={(e) => deleteDelboy(delboy._id)}
+            onClick={(e) => isGuestUser()
+              ? alertShow.show("Sorry, Admin Access only!")
+              :deleteDelboy(delboy._id)}
             className="cursor-pointer hover:bg-gray-200 rounded-lg p-2 mx-1"
           >
             <svg

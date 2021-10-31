@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { DelboyContext } from "./index";
 import { editDelboy, getAllDelboy } from "./FetchApi";
+import { useAlert } from "react-alert";
 
 const EditDelboyModal = (props) => {
   const { data, dispatch } = useContext(DelboyContext);
@@ -9,7 +10,10 @@ const EditDelboyModal = (props) => {
   const [delphone, setDelphone] = useState("");
   const [delpassword, setDelpassword] = useState("");
   const [uId, setUid] = useState("");
-
+  const alertShow = useAlert();
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
   useEffect(() => {
     setDelname(data.editDelboyModal.delname);
     setDelphone(data.editDelboyModal.delphone);
@@ -149,13 +153,28 @@ const EditDelboyModal = (props) => {
             </select>
           </div> */}
           <div className="flex flex-col space-y-1 w-full pb-4 md:pb-6">
+          {isGuestUser() ? (
+            
             <button
               style={{ background: "#303031" }}
-              onClick={(e) => submitForm()}
+              type="button"
+              onClick={(e) =>alertShow.show("Sorry, you are not Admin!")}
               className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2"
             >
              Update Delboy
             </button>
+               
+                ) : (
+                 
+            <button
+            style={{ background: "#303031" }}
+            onClick={(e) => submitForm()}
+            className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2"
+          >
+           Update Delboy
+          </button>
+                )}
+           
           </div>
         </div>
       </div>

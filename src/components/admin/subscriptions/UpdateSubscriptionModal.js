@@ -1,10 +1,14 @@
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { SubscriptionContext } from "./index";
-import { getAllSubscription, editCategory } from "./FetchApi";
+import { getAllSubscription, editSubscription } from "./FetchApi";
+import { useAlert } from "react-alert";
 
 const UpdateSubscriptionModal = (props) => {
   const { data, dispatch } = useContext(SubscriptionContext);
-
+  const alertShow = useAlert();
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
   const [status, setStatus] = useState("");
 
   const [oId, setOid] = useState("");
@@ -16,21 +20,20 @@ const UpdateSubscriptionModal = (props) => {
 
   const fetchData = async () => {
     let responseData = await getAllSubscription();
-    if (responseData.Subscriptions) {
+    if (responseData.Subscription) {
       dispatch({
         type: "fetchSubscriptionAndChangeState",
-        payload: responseData.Subscriptions,
+        payload: responseData.Subscription,
       });
     }
   };
 
   const submitForm = async () => {
     dispatch({ type: "loading", payload: true });
-    let responseData = await editCategory(oId, status);
+    let responseData = await editSubscription(oId, status);
     if (responseData.error) {
       dispatch({ type: "loading", payload: false });
     } else if (responseData.success) {
-      console.log(responseData.success);
       dispatch({ type: "updateSubscriptionModalClose" });
       fetchData();
       dispatch({ type: "loading", payload: false });
@@ -62,7 +65,9 @@ const UpdateSubscriptionModal = (props) => {
             {/* Close Modal */}
             <span
               style={{ background: "#303031" }}
-              onClick={(e) => dispatch({ type: "updateSubscriptionModalClose" })}
+              onClick={(e) =>
+                dispatch({ type: "updateSubscriptionModalClose" })
+              }
               className="cursor-pointer text-gray-100 py-2 px-2 rounded-full"
             >
               <svg
@@ -110,10 +115,14 @@ const UpdateSubscriptionModal = (props) => {
           <div className="flex flex-col space-y-1 w-full pb-4 md:pb-6">
             <button
               style={{ background: "#303031" }}
-              onClick={(e) => submitForm()}
+              onClick={(e) =>
+                isGuestUser()
+                  ? alertShow.show("Sorry, Admin Access only!")
+                  : submitForm()
+              }
               className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2"
             >
-              Update category
+              Update Subscription
             </button>
           </div>
         </div>

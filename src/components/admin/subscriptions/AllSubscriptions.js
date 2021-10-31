@@ -8,6 +8,7 @@ import {
   deleteSubscriptionReq,
 } from "./Actions";
 import Axios from "axios";
+import { useAlert } from "react-alert";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
@@ -101,11 +102,15 @@ const AllCategory = (props) => {
 const CategoryTable = ({ subscription, editSubscription }) => {
   const { dispatch } = useContext(SubscriptionContext);
   const [delboy, setDelboy] = useState([]);
+  const alertShow = useAlert();
   const [datasend, setDatasend] = useState({
     oId: subscription._id,
     status: subscription.status,
     _id: subscription.assignTo,
   });
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
   const getAllDelboy = async () => {
     try {
       let res = await Axios.get(`${apiURL}/api/delboy/all-delboy`);
@@ -243,9 +248,9 @@ const CategoryTable = ({ subscription, editSubscription }) => {
                 type="button"
                 className="focus:outline-none"
                 onClick={() => {
-                  // editOrder(datasend)
-                  // setAdded(!added);
-                  DeleteDeliveryBoy(subscription._id, datasend._id);
+                  isGuestUser()
+                    ? alertShow.show("Sorry, Admin Access only!")
+                    : DeleteDeliveryBoy(subscription._id, datasend._id);
                   setDatasend({ assignTo: null });
                 }}
                 style={{
@@ -288,9 +293,9 @@ const CategoryTable = ({ subscription, editSubscription }) => {
                 type="button"
                 className="focus:outline-none"
                 onClick={() => {
-                  // editOrder(datasend);
-                  assignOrder(datasend);
-                  // setAdded(!added);
+                  isGuestUser()
+                    ? alertShow.show("Sorry, Admin Access only!")
+                    : assignOrder(datasend);
                 }}
                 style={{
                   backgroundColor: "#303031",
@@ -337,7 +342,11 @@ const CategoryTable = ({ subscription, editSubscription }) => {
             </svg>
           </span>
           <span
-            onClick={(e) => deleteSubscriptionReq(subscription._id, dispatch)}
+            onClick={(e) =>
+              isGuestUser()
+                ? alertShow.show("Sorry, Admin Access only!")
+                : deleteSubscriptionReq(subscription._id, dispatch)
+            }
             className="cursor-pointer hover:bg-gray-200 rounded-lg p-2 mx-1"
           >
             <svg

@@ -114,7 +114,6 @@ const SubscriptionMenu = (props) => {
             {/* <SearchFilter /> */}
           </div>
         </div>
-        {/*<AddCategoryModal/>*/}
         <UpdateSubscriptionModal />
       </div>
     </Fragment>

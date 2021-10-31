@@ -2,13 +2,13 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import { getAllSubpack, deleteSubpack } from "./FetchApi";
 import moment from "moment";
 import { SubpackContext } from "./index";
+import { useAlert } from "react-alert";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
 const AllSubpack = (props) => {
   const { data, dispatch } = useContext(SubpackContext);
   const { subpacks } = data;
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -128,6 +128,10 @@ const AllSubpack = (props) => {
 
 /* Single Subpack Component */
 const SubpackTable = ({ subpack, deleteSubpack, editSubpack }) => {
+  const alertShow = useAlert();
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
   return (
     <Fragment>
       <tr>
@@ -187,7 +191,9 @@ const SubpackTable = ({ subpack, deleteSubpack, editSubpack }) => {
             </svg>
           </span>
           <span
-            onClick={(e) => deleteSubpack(subpack._id)}
+            onClick={(e) => isGuestUser()
+              ? alertShow.show("Sorry, Admin Access only!")
+              :deleteSubpack(subpack._id)}
             className="cursor-pointer hover:bg-gray-200 rounded-lg p-2 mx-1"
           >
             <svg

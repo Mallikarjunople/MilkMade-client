@@ -3,11 +3,15 @@ import { SubpackContext } from "./index";
 import { editSubpack, getAllSubpack } from "./FetchApi";
 import { getAllCategory } from "../categories/FetchApi";
 import { productByCategory } from "../products/FetchApi";
+import { useAlert } from "react-alert";
 const apiURL = process.env.REACT_APP_API_URL;
 
 const EditSubpackModal = (props) => {
   const { data, dispatch } = useContext(SubpackContext);
-
+  const alertShow = useAlert();
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
   const [categories, setCategories] = useState(null);
   const [products, setProducts] = useState({});
 
@@ -409,13 +413,27 @@ const EditSubpackModal = (props) => {
               </div>
             </div>
             <div className="flex flex-col space-y-1 w-full pb-4 md:pb-6 mt-4">
-              <button
+            {isGuestUser() ? (
+                  <button
+                  style={{ background: "#303031" }}
+                  type="button"
+                  onClick={() => {
+                    alertShow.show("Sorry, you are not Admin!");
+                  }}
+                  className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2"
+                >
+                  Update Subpack
+                </button>
+                ) : (
+                  <button
                 style={{ background: "#303031" }}
                 type="submit"
                 className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2"
               >
                 Update Subpack
               </button>
+                )}
+             
             </div>
           </form>
         </div>
