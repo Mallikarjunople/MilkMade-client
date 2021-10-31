@@ -1,9 +1,15 @@
 import React, { Fragment, useContext, useState } from "react";
 import { CategoryContext } from "./index";
 import { createCategory, getAllCategory } from "./FetchApi";
+import { useAlert } from "react-alert";
 
 const AddCategoryModal = (props) => {
   const { data, dispatch } = useContext(CategoryContext);
+  const alertShow = useAlert();
+
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
 
   const alert = (msg, type) => (
     <div className={`bg-${type}-200 py-2 px-4 w-full`}>{msg}</div>
@@ -199,13 +205,25 @@ const AddCategoryModal = (props) => {
                 <label for="file-upload" class="custom-file-upload">
                   <span className="cursor-pointer">Upload Image </span>
                 </label>
-                <input
-                  onChange={(e) => uploadImage(e)}
-                  name="image"
-                  accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-                  type="file"
-                  id="file-upload"
-                />
+                {isGuestUser() ? (
+                  <input
+                    onClick={() => {
+                      alertShow.show("Sorry, you are not Admin!");
+                    }}
+                    name="image"
+                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                    type="button"
+                    id="file-upload"
+                  />
+                ) : (
+                  <input
+                    onChange={(e) => uploadImage(e)}
+                    name="image"
+                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                    type="file"
+                    id="file-upload"
+                  />
+                )}
               </div>
             </div>
             <div className="flex flex-col space-y-1 w-full">

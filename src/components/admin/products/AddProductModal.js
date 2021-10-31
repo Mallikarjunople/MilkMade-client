@@ -2,13 +2,19 @@ import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ProductContext } from "./index";
 import { createProduct, getAllProduct, editProductbyVariant } from "./FetchApi";
 import { getAllCategory } from "../categories/FetchApi";
+import { useAlert } from "react-alert";
 
 const AddProductDetail = ({ categories }) => {
   const { data, dispatch } = useContext(ProductContext);
   const [showImages, setShowImages] = useState([]);
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
   const alert = (msg, type) => (
     <div className={`bg-${type}-200 py-1 px-4 w-full`}>{msg}</div>
   );
+  const alertShow = useAlert();
+
   const [variant, setVariant] = useState({
     value: 0,
     unit: "",
@@ -42,7 +48,7 @@ const AddProductDetail = ({ categories }) => {
   const uploadImage = async (e) => {
     const files = e.target.files;
     const data = new FormData();
-    let arrayImagesUrl=[];
+    let arrayImagesUrl = [];
     for (const i of files) {
       data.append("file", i);
       data.append("upload_preset", "MilkMadepreset");
@@ -255,33 +261,34 @@ const AddProductDetail = ({ categories }) => {
                 </span>
               </label>
               <div style={{ display: "flex", flexDirection: "row" }}>
-                {/* <input
-                  onChange={(e) => {
-                    uploadImage(e);
-                  }}
-                  type="file"
-                  accept=".jpg, .jpeg, .png"
-                  className="px-1 py-1 border focus:outline-none"
-                  style={{ width: "40%" }}
-                  id="image"
-                  multiple
-                /> */}
-              <div
-                style={{ background: "#303031", width: "max-content" }}
-                className="relative z-0 rounded text-white flex justify-center text-sm"
-              >
-                <label for="file-upload" class="custom-file-upload">
-                  <span className="cursor-pointer">Upload Image </span>
-                </label>
-                <input
-                  onChange={(e) => uploadImage(e)}
-                  name="image"
-                  accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-                  type="file"
-                  id="file-upload"
-                  multiple
-                />
-              </div>
+                <div
+                  style={{ background: "#303031", width: "max-content" }}
+                  className="relative z-0 rounded text-white flex justify-center text-sm"
+                >
+                  <label for="file-upload" class="custom-file-upload">
+                    <span className="cursor-pointer">Upload Image </span>
+                  </label>
+                  {isGuestUser() ? (
+                    <input
+                      onClick={() => {
+                        alertShow.show("Sorry, Admin Access only!");
+                      }}
+                      name="image"
+                      accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                      type="button"
+                      id="file-upload"
+                    />
+                  ) : (
+                    <input
+                      onChange={(e) => uploadImage(e)}
+                      name="image"
+                      accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                      type="file"
+                      id="file-upload"
+                      multiple
+                    />
+                  )}
+                </div>
                 <div
                   style={{
                     display: "flex",
@@ -354,8 +361,8 @@ const AddProductDetail = ({ categories }) => {
             <div className="w-100 flex flex-row space-y-1 space-x-1">
               <label htmlFor="variantval">Select Variant</label>
               <span className="text-red-600 text-xs">
-              *Add at least 2 Variant
-                </span>
+                *Add at least 2 Variant
+              </span>
               <div className="w-100 flex flex-row space-x-1">
                 <input
                   value={variant.value || 0}

@@ -2,12 +2,16 @@ import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ProductContext } from "./index";
 import { editProduct, getAllProduct } from "./FetchApi";
 import { getAllCategory } from "../categories/FetchApi";
-const apiURL = process.env.REACT_APP_API_URL;
+import { useAlert } from "react-alert";
 
+const apiURL = process.env.REACT_APP_API_URL;
+const isGuestUser = () => {
+  return localStorage.getItem("loggedInRole") == 2;
+};
 const EditProductModal = (props) => {
   const { data, dispatch } = useContext(ProductContext);
   const [showImages, setShowImages] = useState([]);
-
+  const alertShow = useAlert();
   const [categories, setCategories] = useState(null);
   const [variant, setVariant] = useState({
     value: 0,
@@ -29,7 +33,7 @@ const EditProductModal = (props) => {
     pQuantity: "",
     pPrice: "",
     pOffer: "",
-    pVariant:[],
+    pVariant: [],
     error: false,
     success: false,
   });
@@ -58,8 +62,7 @@ const EditProductModal = (props) => {
       pOffer: data.editProductModal.pOffer,
       pVariant: data.editProductModal.pVariant,
     });
-    setShowImages([...showImages,data.editProductModal.pImages])
-
+    setShowImages([...showImages, data.editProductModal.pImages]);
   }, [data.editProductModal]);
 
   const fetchData = async () => {
@@ -105,7 +108,10 @@ const EditProductModal = (props) => {
   };
   const submitVariant = () => {
     console.log(variant);
-    setEditformdata({ ...editformData, pVariant: [...editformData.pVariant, variant] });
+    setEditformdata({
+      ...editformData,
+      pVariant: [...editformData.pVariant, variant],
+    });
     console.log(editformData);
   };
   return (
@@ -160,7 +166,7 @@ const EditProductModal = (props) => {
           {editformData.success ? alert(editformData.success, "green") : ""}
           <form className="w-full" onSubmit={(e) => submitForm(e)}>
             <div className="flex space-x-1 py-2">
-            <div className="w-1/2 flex flex-col space-y-1">
+              <div className="w-1/2 flex flex-col space-y-1">
                 <label htmlFor="status">Product Category *</label>
                 <select
                   onChange={(e) =>
@@ -224,7 +230,6 @@ const EditProductModal = (props) => {
                   type="text"
                 />
               </div>
-             
             </div>
             <div className="flex flex-col space-y-2">
               <label htmlFor="description">Product Description *</label>
@@ -247,62 +252,73 @@ const EditProductModal = (props) => {
             </div>
             {/* Most Important part for uploading multiple image */}
 
-
-
-
-            <div className="flex flex-col mt-4">
-              <label htmlFor="image">
+            <div className="flex flex-row mt-4">
+             <div className="flex flex-col"> <label htmlFor="image">
                 Product Images *
-                <span className="text-gray-600 text-xs">
+              </label>
+              <span className="text-gray-600 text-xs">
                   Upload at least 2 images
                 </span>
-              </label>
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <input
-                  onChange={(e) => {
-                    setEditformdata({
-                      ...editformData,
-                      error: false,
-                      success: false,
-                      pEditImages: [...e.target.files],
-                    })
-                    setShowImages([...showImages, ...e.target.files]);
-                  }}
-                  type="file"
-                  accept=".jpg, .jpeg, .png"
-                  className="px-1 py-1 border focus:outline-none"
-                  style={{ width: "40%" }}
-                  id="image"
-                  multiple
-                />
-
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                  }}
-                >
-
-                  {editformData.pImages &&
-                    editformData.pImages.map((item, index) => {
-                      return (
-                        <div key={index}>
-                          {console.log(item)}
-                          <img
-                            src={`${apiURL}/uploads/products/${item}`}
-                            style={{ width: "35px", height: "35px" }}
-                            alt="NoImages"
-                          />
-                        </div>
-                      );
-                    })}
                 </div>
+              <div
+                style={{ background: "#303031", width: "max-content" }}
+                className="relative z-0  rounded text-white flex justify-center "
+              >
+                <label for="file-upload" class="custom-file-upload">
+                  <span className="cursor-pointer">Upload Image </span>
+                </label>
+                {isGuestUser() ? (
+                  <input
+                    onClick={() => {
+                      alertShow.show("Sorry, Admin Access only!");
+                    }}
+                    name="image"
+                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                    type="button"
+                    id="file-upload"
+                  />
+                ) : (
+                  <input
+                    onChange={(e) => {
+                      setEditformdata({
+                        ...editformData,
+                        error: false,
+                        success: false,
+                        pEditImages: [...e.target.files],
+                      });
+                      setShowImages([...showImages, ...e.target.files]);
+                    }}
+                    type="file"
+                    accept=".jpg, .jpeg, .png"
+                    className="px-1 py-1 border focus:outline-none"
+                    style={{ width: "40%" }}
+                    id="image"
+                    multiple
+                  />
+                )}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                }}
+              >
+                {editformData.pImages &&
+                  editformData.pImages.map((item, index) => {
+                    return (
+                      <div key={index}>
+                        {console.log(item)}
+                        <img
+                          src={`${apiURL}/uploads/products/${item}`}
+                          style={{ width: "35px", height: "35px" }}
+                          alt="NoImages"
+                        />
+                      </div>
+                    );
+                  })}
               </div>
             </div>
-
-
-
 
             {/* <div className="flex flex-col mt-4">
               <label htmlFor="image">Product Images *</label>
@@ -448,11 +464,15 @@ const EditProductModal = (props) => {
                   </svg>
                 </button>
                 {editformData.pVariant.map((item, index) => {
-                  return (<div key={index}>{item.value}{item.unit}</div>)
+                  return (
+                    <div key={index}>
+                      {item.value}
+                      {item.unit}
+                    </div>
+                  );
                 })}
               </div>
             </div>
-
 
             <div className="flex space-x-1 py-1">
               <div className="w-1/2 flex flex-col space-y-1">
@@ -491,13 +511,28 @@ const EditProductModal = (props) => {
               </div>
             </div>
             <div className="flex flex-col space-y-1 w-full pb-4 md:pb-6 mt-4">
+            {isGuestUser() ? (
               <button
+                onClick={() => {
+                  alertShow.show("Sorry, Admin Access only!");
+                }}
                 style={{ background: "#303031" }}
-                type="submit"
+                type="button"
                 className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-1"
-              >
+                >
                 Update product
-              </button>
+             </button>
+             
+            ) : (
+              <button
+              style={{ background: "#303031" }}
+              type="submit"
+              className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-1"
+            >
+              Update product
+            </button>
+            )}
+              
             </div>
           </form>
         </div>

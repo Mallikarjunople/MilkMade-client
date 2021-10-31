@@ -2,9 +2,12 @@ import React, { Fragment, useContext, useEffect } from "react";
 import { DashboardContext } from "./";
 import { uploadImage, sliderImages, deleteImage } from "./Action";
 import "./main.css";
+import { useAlert } from "react-alert";
 
 const apiURL = process.env.REACT_APP_API_URL;
-const isGuestUser = () =>{return localStorage.getItem("loggedInRole") == 2}
+const isGuestUser = () => {
+  return localStorage.getItem("loggedInRole") == 2;
+};
 const Customize = () => {
   const { data, dispatch } = useContext(DashboardContext);
 
@@ -47,6 +50,7 @@ const Customize = () => {
 
 const UploadImageSection = () => {
   const { data, dispatch } = useContext(DashboardContext);
+  const alertShow = useAlert();
 
   const uploadImageHandler = (image) => {
     uploadImage(image, dispatch);
@@ -60,21 +64,31 @@ const UploadImageSection = () => {
         </h1>
         <div className="relative flex flex-col space-y-2">
           <div
-            style={{ background: "#303031",width:"max-content" }}
+            style={{ background: "#303031", width: "max-content" }}
             className="relative z-0 px-4 py-2 rounded text-white flex justify-center space-x-2 md:w-4/12"
           >
             <label for="file-upload" class="custom-file-upload">
               <span className="cursor-pointer">Upload File + </span>
             </label>
-            <input
-              onChange={(e) => uploadImageHandler(e.target.files[0])}
-              name="image"
-              accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-            
-              type="file"
-              id="file-upload"
-             
-            />
+            {isGuestUser() ? (
+              <input
+                onClick={() => {
+                  alertShow.show("Sorry, Admin Access only!");
+                }}
+                name="image"
+                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                type="button"
+                id="file-upload"
+              />
+            ) : (
+              <input
+                onChange={(e) => uploadImageHandler(e.target.files[0])}
+                name="image"
+                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                type="file"
+                id="file-upload"
+              />
+            )}
           </div>
         </div>
         <span
@@ -110,7 +124,7 @@ const UploadImageSection = () => {
 
 const AllImages = () => {
   const { data, dispatch } = useContext(DashboardContext);
-
+  const alertShow = useAlert();
   useEffect(() => {
     sliderImages(dispatch);
   }, []);
@@ -152,7 +166,11 @@ const AllImages = () => {
                   alt="sliderImages"
                 />
                 <span
-                  onClick={(e) => deleteImageReq(item._id)}
+                  onClick={(e) =>
+                    isGuestUser()
+                      ? alertShow.show("Sorry, Admin Access only!")
+                      : deleteImageReq(item._id)
+                  }
                   style={{ background: "#303031" }}
                   className="absolute top-0 right-0 m-1 text-white cursor-pointer rounded-full p-1"
                 >

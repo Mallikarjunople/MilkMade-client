@@ -1,10 +1,14 @@
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { CategoryContext } from "./index";
 import { editCategory, getAllCategory } from "./FetchApi";
+import { useAlert } from "react-alert";
 
+const isGuestUser = () => {
+  return localStorage.getItem("loggedInRole") == 2;
+};
 const EditCategoryModal = (props) => {
   const { data, dispatch } = useContext(CategoryContext);
-
+  const alertShow = useAlert();
   const [des, setDes] = useState("");
   const [status, setStatus] = useState("");
   const [cId, setCid] = useState("");
@@ -61,7 +65,7 @@ const EditCategoryModal = (props) => {
         <div className="relative bg-white w-11/12 md:w-3/6 shadow-lg flex flex-col items-center space-y-4  overflow-y-auto px-4 py-4 md:px-8">
           <div className="flex items-center justify-between w-full pt-4">
             <span className="text-left font-semibold text-2xl tracking-wider">
-              Add Category
+              Edit Category
             </span>
             {/* Close Modal */}
             <span
@@ -117,10 +121,12 @@ const EditCategoryModal = (props) => {
           <div className="flex flex-col space-y-1 w-full pb-4 md:pb-6">
             <button
               style={{ background: "#303031" }}
-              onClick={(e) => submitForm()}
+              onClick={(e) =>  isGuestUser()
+                ? alertShow.show("Sorry, Admin Access only!")
+                : submitForm()}
               className="rounded-full bg-gray-800 text-gray-100 text-lg font-medium py-2"
             >
-              Create category
+              Update category
             </button>
           </div>
         </div>

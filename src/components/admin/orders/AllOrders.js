@@ -4,6 +4,7 @@ import moment from "moment";
 import { OrderContext } from "./index";
 import { fetchData, editOrderReq, deleteOrderReq } from "./Actions";
 
+import { useAlert } from "react-alert";
 import eye from "../../../assets/eye.png";
 import { editOrder } from "./FetchApi";
 import Axios from "axios";
@@ -102,9 +103,11 @@ const AllCategory = (props) => {
 /* Single Category Component */
 const CategoryTable = ({ order, srNo }) => {
   const { dispatch } = useContext(OrderContext);
-  // console.log(order);
+  const alertShow = useAlert();
+  const isGuestUser = () => {
+    return localStorage.getItem("loggedInRole") == 2;
+  };
 
-  const [added, setAdded] = useState(false);
   const [delboy, setDelboy] = useState([]);
   const [datasend, setDatasend] = useState({
     oId: order._id,
@@ -164,7 +167,7 @@ const CategoryTable = ({ order, srNo }) => {
     if (datasend && order.assignAction === "false") {
       // console.log(datasend);
       let data = {
-        assignAction:"true",
+        assignAction: "true",
         pOrder: order._id,
         status: "Processing",
         _id: datasend.assignTo,
@@ -184,11 +187,11 @@ const CategoryTable = ({ order, srNo }) => {
     }
   };
 
-  const DeleteDeliveryBoy = (id,delboyId) => {
+  const DeleteDeliveryBoy = (id, delboyId) => {
     let data = {
-      assignAction:"false",
+      assignAction: "false",
       pOrder: id,
-      _id:delboyId,
+      _id: delboyId,
       status: "Not processed",
     };
     Axios.post(`${apiURL}/api/delboy/edit-delboy-by-order`, data)
@@ -274,9 +277,9 @@ const CategoryTable = ({ order, srNo }) => {
                 type="button"
                 className="focus:outline-none"
                 onClick={() => {
-                  // editOrder(datasend)
-                  // setAdded(!added);
-                  DeleteDeliveryBoy(order._id,datasend._id);
+                  isGuestUser()
+                    ? alertShow.show("Sorry, Admin Access only!")
+                    : DeleteDeliveryBoy(order._id, datasend._id);
                   setDatasend({ assignTo: null });
                 }}
                 style={{
@@ -308,20 +311,14 @@ const CategoryTable = ({ order, srNo }) => {
                       </option>
                     );
                   })}
-                {/* <option name="status" value="">
-                    Select unit
-                  </option>
-                  <option name="status" value="units">
-                    units
-                  </option> */}
               </select>
               <button
                 type="button"
                 className="focus:outline-none"
                 onClick={() => {
-                  // editOrder(datasend);
-                  assignOrder(datasend);
-                  // setAdded(!added);
+                  isGuestUser()
+                    ? alertShow.show("Sorry, Admin Access only!")
+                    : assignOrder(datasend);
                 }}
                 style={{
                   backgroundColor: "#303031",
@@ -378,7 +375,9 @@ const CategoryTable = ({ order, srNo }) => {
             </svg>
           </span> */}
           <span
-            onClick={(e) => deleteOrderReq(order._id, dispatch)}
+            onClick={() =>  isGuestUser()
+              ? alertShow.show("Sorry, Admin Access only!")
+              :  deleteOrderReq(order._id, dispatch)}
             className="cursor-pointer hover:bg-gray-200 rounded-lg p-2 mx-1"
           >
             <svg

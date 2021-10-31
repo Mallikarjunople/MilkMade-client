@@ -2,9 +2,13 @@ import React, { Fragment, useContext, useEffect } from "react";
 import { getAllCategory, deleteCategory } from "./FetchApi";
 import { CategoryContext } from "./index";
 import moment from "moment";
+import { useAlert } from "react-alert";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
+const isGuestUser = () => {
+  return localStorage.getItem("loggedInRole") == 2;
+};
 const AllCategory = (props) => {
   const { data, dispatch } = useContext(CategoryContext);
   const { categories, loading } = data;
@@ -121,6 +125,7 @@ const AllCategory = (props) => {
 
 /* Single Category Component */
 const CategoryTable = ({ category, deleteCat, editCat }) => {
+  const alertShow = useAlert();
   return (
     <Fragment>
       <tr>
@@ -185,7 +190,11 @@ const CategoryTable = ({ category, deleteCat, editCat }) => {
             </svg>
           </span>
           <span
-            onClick={(e) => deleteCat(category._id)}
+            onClick={(e) =>
+              isGuestUser()
+                ? alertShow.show("Sorry, Admin Access only!")
+                : deleteCat(category._id)
+            }
             className="cursor-pointer hover:bg-gray-200 rounded-lg p-2 mx-1"
           >
             <svg

@@ -2,7 +2,12 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import { getAllProduct, deleteProduct } from "./FetchApi";
 import moment from "moment";
 import { ProductContext } from "./index";
+import { useAlert } from "react-alert";
 
+
+const isGuestUser = () => {
+  return localStorage.getItem("loggedInRole") == 2;
+};
 const apiURL = process.env.REACT_APP_API_URL;
 
 const AllProduct = (props) => {
@@ -127,6 +132,7 @@ const AllProduct = (props) => {
 
 /* Single Product Component */
 const ProductTable = ({ product, deleteProduct, editProduct }) => {
+  const alertShow = useAlert();
   return (
     <Fragment>
       <tr>
@@ -199,7 +205,9 @@ const ProductTable = ({ product, deleteProduct, editProduct }) => {
             </svg>
           </span>
           <span
-            onClick={(e) => deleteProduct(product._id)}
+            onClick={(e) => isGuestUser()
+              ? alertShow.show("Sorry, Admin Access only!")
+              : deleteProduct(product._id)}
             className="cursor-pointer hover:bg-gray-200 rounded-lg p-2 mx-1"
           >
             <svg
